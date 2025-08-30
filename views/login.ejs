@@ -1,0 +1,13 @@
+<% layout('layout') %>
+<%- include('partials/auth-header', { title: 'Sign in to Fastodo' }) %>
+<section class="auth">
+  <form method="POST" action="/login" class="card">
+    <% if (error) { %><div class="error"><%= error %></div><% } %>
+    <label>Email</label>
+    <input type="email" name="email" required />
+    <label>Password</label>
+    <input type="password" name="password" required />
+    <button type="submit">Sign in</button>
+    <p class="muted">No account? <a href="/register">Create one</a></p>
+  </form>
+</section>

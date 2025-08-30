@@ -1,0 +1,349 @@
+/* =========================
+   Fastodo — Clean Dark UI
+   ========================= */
+* { box-sizing: border-box }
+:root{
+  --bg:#0b0d11;
+  --panel:#0f1217;
+  --panel2:#1b2027;
+  --line:#2a2f38;
+  --text:#e7ecf3;
+  --muted:#a9b2c2;
+  --accent:#f7c044;   /* yellow from screenshot */
+  --chip:#2b3039;
+  --blue:#2563eb;
+  --red:#c43c34;
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,Arial,sans-serif;
+}
+
+/* ---------- Top bar ---------- */
+.topnav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 16px;border-bottom:1px solid var(--line);
+  background:#0a0c10;position:sticky;top:0;z-index:10
+}
+.brand{font-weight:800;letter-spacing:.3px}
+.zap{color:var(--accent);margin-right:6px}
+.userbox{display:flex;gap:10px;align-items:center}
+.hello{opacity:.9}
+.ghost{
+  background:transparent;border:1px solid var(--line);color:var(--text);
+  padding:6px 10px;border-radius:10px;cursor:pointer
+}
+.full{width:100%}
+
+/* ---------- Three-column layout ---------- */
+.app{
+  display:grid;grid-template-columns:240px 1fr 320px;gap:18px;
+  max-width:1240px;margin:16px auto;padding:0 16px
+}
+
+/* ---------- Left sidebar ---------- */
+.sidebar{
+  background:#12151a;border:1px solid var(--line);
+  border-radius:16px;padding:16px
+}
+.lists-title{opacity:.9;font-weight:700;margin-bottom:10px}
+.list-nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.list-nav a{
+  display:block;padding:10px 12px;border-radius:10px;color:var(--text);
+  text-decoration:none;background:transparent;border:1px solid transparent
+}
+.list-nav a.active{
+  background:rgba(247,192,68,.15);border-color:rgba(247,192,68,.25);color:#fff;
+  box-shadow:inset 0 0 0 2px rgba(247,192,68,.25)
+}
+.list-nav a:hover{background:#20252d;border-color:#343b47}
+.newlist summary{cursor:pointer;color:var(--muted);margin-top:8px}
+
+/* ---------- Center column (hero + tasks) ---------- */
+.center{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:16px;padding:18px 18px 22px;position:relative
+}
+
+/* Date badge (top-left) */
+.date-stack{
+  position:absolute;left:18px;top:10px;opacity:.95;text-align:center
+}
+.date-big{font-weight:700;font-size:14px;letter-spacing:.5px}
+.date-num{font-size:32px;font-weight:800;line-height:1;margin-top:2px}
+
+/* Large heading like screenshot */
+.greet{
+  margin:6px 0 0 66px;            /* push right of date badge */
+  font-size:42px; line-height:1.1; font-weight:800; letter-spacing:.3px
+}
+.plan{ margin:6px 0 16px 66px; opacity:.75; font-weight:600 }
+
+/* ---------- Add bar + collapsible panel ---------- */
+.addbar{
+  width:100%; background:#2a2f38;border:1px solid #3a4250;color:var(--text);
+  padding:14px 16px;border-radius:14px;text-align:left;cursor:pointer;
+  font-weight:600; opacity:.92
+}
+.panel{
+  margin:12px 0 12px; background:#1a1e25; border:1px solid #2f3642;
+  border-radius:14px; overflow:hidden; max-height:0; transition:max-height .25s ease
+}
+.panel.open{ /* height set inline by JS for smooth slide */ }
+.panel input, .panel select, .panel textarea{
+  width:100%; background:#0f1520; border:1px solid #243245; border-radius:10px;
+  color:var(--text); padding:10px 12px; margin-top:6px
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:10px}
+.radios label{margin-right:16px}
+.check{display:flex;align-items:end}
+.actions{display:flex;justify-content:flex-end;margin-top:12px}
+.actions button{background:var(--blue);border:none;color:white;padding:10px 14px;border-radius:10px;cursor:pointer}
+
+/* ---------- Task list (compact) ---------- */
+.cards{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.card{
+  background:var(--panel2); border:1px solid var(--line);
+  border-radius:14px; padding:12px 14px
+}
+.card.done{opacity:.5}
+.card.overdue{border-color:#8a2620}
+.row{display:flex;align-items:center;gap:12px}
+
+/* Circle "ring" checkbox like screenshot */
+.toggle{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid #b7beca;background:transparent;cursor:pointer;position:relative;
+}
+.toggle:checked{
+  border-color:#d8a63a;           /* golden ring */
+}
+.toggle:checked::after{
+  content:""; position:absolute; inset:3px; border-radius:50%;
+  background:#d8a63a;
+}
+
+/* Text + meta */
+.flexcol{display:flex;flex-direction:column;gap:4px; flex:1}
+.title{font-size:16px;font-weight:700;letter-spacing:.2px}
+.desc{opacity:.85}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;font-size:12px;opacity:.9}
+.pill{
+  font-size:11px;border:1px solid #3a4250;border-radius:999px;padding:2px 8px;opacity:.95
+}
+.date-pill{
+  font-size:11px;background:#2f3540;border-radius:6px;padding:2px 6px
+}
+
+.editwrap{margin-top:8px;border-top:1px dashed #343b47;padding-top:8px}
+.danger{
+  margin-top:8px;background:var(--blue); /* blue bar matches screenshot action button look */
+  border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;width:100%;
+}
+
+/* ---------- Right rail ---------- */
+.rail{
+  background:#12151a;border:1px solid var(--line);
+  border-radius:16px;padding:16px
+}
+.cal-head{font-weight:800;margin-bottom:8px}
+.calendar-skeleton{
+  height:240px;border:1px dashed #2f3642;border-radius:12px;margin-bottom:12px
+}
+
+/* "Show All" like a subtle gray pill */
+.rail .ghost{
+  display:block;text-align:center;background:#2a2f38;border-color:#3a4250;border-radius:10px;
+  padding:10px 12px;color:#e8ecf4;text-decoration:none
+}
+
+.sort-box .label{font-weight:800;margin:12px 0 6px}
+.sort-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sort-grid a{
+  display:block;text-align:center;text-decoration:none;
+  background:#2a2f38;border:1px solid #3a4250;color:var(--text);
+  padding:10px 8px;border-radius:10px;cursor:pointer
+}
+.sort-grid .on{background:var(--accent);color:#111}
+
+/* ---------- Auth pages ---------- */
+.header-hero{max-width:680px;margin:32px auto 0;padding:0 16px;text-align:center}
+.header-hero .sub{opacity:.8}
+.auth{display:grid;place-items:center;margin:12px 0 40px}
+.card{max-width:420px;width:100%}
+.card label{display:block;margin-top:10px}
+.card input{
+  width:100%;background:#0f1520;border:1px solid #243245;border-radius:10px;color:var(--text);
+  padding:10px 12px;margin-top:6px
+}
+.card button{
+  margin-top:14px;background:var(--blue);border:none;color:#fff;padding:10px 14px;border-radius:10px;width:100%
+}
+.error{background:#442327;border:1px solid #7f3030;color:#ffd4d4;padding:8px 10px;border-radius:10px;margin-bottom:10px}
+.muted{opacity:.75}
+
+/* ---------- Responsive tweak ---------- */
+@media (max-width: 900px){
+  .app{grid-template-columns:1fr}
+  .greet,.plan{margin-left:0}
+  .date-stack{left:10px;top:8px}
+}
+
+/* ==== Compact task like reference ==== */
+
+/* card container */
+.card{
+  background:#21252c;
+  border:1px solid #2a2f38;
+  border-radius:16px;
+  padding:12px 14px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.08) inset;
+}
+
+/* top strip: date left, tag right */
+.card-top{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px;
+}
+.date-chip{
+  font-size:11px; color:#cfd6e3; opacity:.85;
+  background:#2f3540; padding:3px 8px; border-radius:8px;
+}
+.tag-chip{
+  font-size:12px; color:#cfd6e3; opacity:.9;
+  background:#2a2f38; padding:4px 10px; border-radius:8px;
+}
+
+/* main row: ring checkbox + title */
+.task-row{
+  display:flex; align-items:center; gap:10px;
+  padding:6px 8px;
+  background:#2a2f38; border:1px solid #3a4250; border-radius:12px;
+}
+
+/* ring checkbox (small circle) */
+.toggle{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  width:18px; height:18px; border-radius:50%;
+  border:2px solid #cdbb86; background:transparent; cursor:pointer; position:relative;
+  flex:0 0 auto;
+}
+.toggle:checked{ border-color:#f7c044; }
+.toggle:checked::after{
+  content:""; position:absolute; inset:3px; border-radius:50%; background:#f7c044;
+}
+
+/* title text inline with checkbox */
+.title{
+  font-size:16px; font-weight:600; color:#e7ecf3;
+  line-height:1.2; letter-spacing:.2px;
+}
+
+/* subtle states */
+.card.done .title{ text-decoration:line-through; opacity:.7 }
+.card.overdue{ border-color:#8a2620 }
+
+/* make delete full-width like the reference action bar */
+.danger{
+  margin-top:10px; width:100%;
+  background:#2b54da; border:none; color:#fff;
+  padding:10px 14px; border-radius:10px; cursor:pointer;
+}
+
+/* remove any prior “big checkbox” rule */
+.row input[type="checkbox"]{ transform:none; margin:0 }
+
+/* optional: hide bucket/priority pills on the compact face (kept in Edit) */
+.meta, .pill, .date-pill{ display:none }
+
+/* --- Compact card face --- */
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.date-chip{font-size:11px;color:#cfd6e3;opacity:.85;background:#2f3540;padding:3px 8px;border-radius:8px}
+.tag-chip{font-size:12px;color:#cfd6e3;opacity:.9;background:#2a2f38;padding:4px 10px;border-radius:8px}
+
+.task-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:#2a2f38;border:1px solid #3a4250;border-radius:12px;
+  width:100%;
+}
+.task-row .title{
+  flex:1; min-width:0; font-size:16px;font-weight:600;color:#e7ecf3;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* Ring checkbox */
+.toggle{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid #cdbb86;background:transparent;cursor:pointer;position:relative;flex:0 0 auto;
+}
+.toggle:checked{ border-color:#f7c044 }
+.toggle:checked::after{ content:""; position:absolute; inset:3px; border-radius:50%; background:#f7c044 }
+
+/* Remove old big checkbox rule if present */
+.row input[type="checkbox"]{ transform:none; margin:0 }
+
+/* --- Simple calendar --- */
+.calendar{background:#0f1217;border:1px solid #2a2f38;border-radius:12px;padding:10px;margin-bottom:12px}
+.cal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.cal-headings span{font-size:12px;opacity:.8;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-cell{
+  height:28px; display:flex; align-items:center; justify-content:center;
+  border:1px dashed #2f3642;border-radius:8px; font-size:12px; color:#cfd6e3; opacity:.9
+}
+.cal-cell.today{ background:#f7c044; color:#111; border-color:#f7c044; font-weight:700 }
+
+/* Make Delete look like the wide blue bar in your ref */
+.danger{ width:100%; background:#2b54da; border:none; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer }
+/* --- Simple task pill (like the Add Todo bar) --- */
+.task-pill{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  background:#2a2f38;            /* same as .addbar */
+  border:1px solid #3a4250;      /* same as .addbar */
+  color:var(--text);
+  padding:12px 14px;
+  border-radius:14px;
+}
+
+/* normal checkbox (no custom ring), small and neat */
+.task-pill .toggle{
+  appearance:auto;               /* use native checkbox */
+  width:16px;height:16px;
+  margin:0 6px 0 2px;
+}
+
+/* title shows properly and can ellipsis if long */
+.task-pill .task-title{
+  flex:1; min-width:0;
+  font-size:16px; font-weight:600; line-height:1.2;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:var(--text);
+}
+
+/* tighten the card wrapper */
+.card{ padding:12px 14px; border-radius:16px; background:#1b2027; border:1px solid var(--line) }
+.card-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+.date-chip{ font-size:11px; background:#2f3540; padding:3px 8px; border-radius:8px; opacity:.9 }
+.tag-chip{ font-size:12px; background:#2a2f38; padding:4px 10px; border-radius:8px; opacity:.9 }
+.card.done .task-title{ text-decoration:line-through; opacity:.65 }
+
+/* remove any earlier big-checkbox rule */
+.row input[type="checkbox"]{ transform:none; margin:0 }
+
+/* calendar (if you kept it) */
+.calendar{background:#0f1217;border:1px solid #2a2f38;border-radius:12px;padding:10px;margin-bottom:12px}
+.cal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.cal-headings span{font-size:12px;opacity:.8;text-align:center}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-cell{height:28px;display:flex;align-items:center;justify-content:center;border:1px dashed #2f3642;border-radius:8px;font-size:12px;color:#cfd6e3;opacity:.9}
+.cal-cell.today{background:#f7c044;color:#111;border-color:#f7c044;font-weight:700}

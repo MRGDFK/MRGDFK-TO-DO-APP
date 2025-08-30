@@ -1,0 +1,15 @@
+<% layout('layout') %>
+<%- include('partials/auth-header', { title: 'Create your account' }) %>
+<section class="auth">
+  <form method="POST" action="/register" class="card">
+    <% if (error) { %><div class="error"><%= error %></div><% } %>
+    <label>Name</label>
+    <input name="name" required />
+    <label>Email</label>
+    <input type="email" name="email" required />
+    <label>Password</label>
+    <input type="password" name="password" required />
+    <button type="submit">Sign up</button>
+    <p class="muted">Already have one? <a href="/login">Sign in</a></p>
+  </form>
+</section>

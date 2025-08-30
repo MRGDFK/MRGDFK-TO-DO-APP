@@ -1,0 +1,209 @@
+<% layout('layout') %>
+
+<div class="app">
+  <!-- Left sidebar -->
+  <aside class="sidebar">
+    <div class="lists-title">My Lists</div>
+    <ul class="list-nav">
+      <li>
+        <a class="<%= activeBucket==='All'?'active':'' %>"
+           href="/?bucket=All&sort=<%= encodeURIComponent(activeSort||'none') %>">All</a>
+      </li>
+      <% buckets.forEach(b => { %>
+        <li>
+          <a class="<%= activeBucket===b?'active':'' %>"
+             href="/?bucket=<%= encodeURIComponent(b) %>&sort=<%= encodeURIComponent(activeSort||'none') %>"><%= b %></a>
+        </li>
+      <% }) %>
+    </ul>
+
+  </aside>
+
+  <!-- Center column -->
+  <main class="center">
+    <div class="date-stack">
+      <div class="date-big"><%= dayjs().format('MMM') %></div>
+      <div class="date-num"><%= dayjs().format('D') %></div>
+    </div>
+
+    <h1 class="greet">Good <%= dayjs().hour() < 12 ? 'Morning' : (dayjs().hour()<18?'Afternoon':'Evening') %>.</h1>
+    <p class="plan">What’s your plan for today?</p>
+
+    <!-- Add Todo (expands) -->
+    <button id="toggleAdd" type="button" class="addbar">Add Todo</button>
+    <form id="addForm" class="panel" method="POST" action="/tasks">
+      <input type="text" name="title" placeholder="Task title…" required />
+
+      <div class="grid2">
+        <div>
+          <label>Date</label>
+          <input type="date" name="due_at" />
+        </div>
+        <div>
+          <label>Priority</label>
+          <div class="radios">
+            <label><input type="radio" name="priority" value="High"> High</label>
+            <label><input type="radio" name="priority" value="Mid" checked> Mid</label>
+            <label><input type="radio" name="priority" value="Low"> Low</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <label>Bucket</label>
+          <select name="bucket">
+            <% buckets.forEach(b => { %>
+              <option value="<%= b %>" <%= activeBucket===b?'selected':'' %>><%= b %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <label>New bucket (optional)</label>
+          <input type="text" name="bucket_custom" id="bucket_custom" placeholder="e.g., Study" />
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div>
+          <label>Tag</label>
+          <input type="text" name="tag" placeholder="e.g., blog" />
+        </div>
+        <div class="check">
+          <label><input type="checkbox" name="reminder_enabled" value="1"> Reminder</label>
+        </div>
+      </div>
+
+      <label>Description</label>
+      <textarea name="description" rows="2" placeholder="Notes…"></textarea>
+
+      <div class="actions"><button type="submit">Save Task</button></div>
+    </form>
+
+    <!-- Task cards (simple pill row like Add Todo) -->
+    <ul class="cards">
+      <% tasks.forEach(task => { 
+        const overdue = task.due_at && dayjs(task.due_at).isBefore(dayjs()) && !task.is_done;
+        const tagText = (task.tag || '').toString().trim();
+      %>
+      <li class="card <%= task.is_done?'done':'' %> <%= overdue?'overdue':'' %>">
+
+        <!-- small line with date + optional tag above the pill -->
+        <div class="card-top">
+          <span class="date-chip"><%= task.due_at ? dayjs(task.due_at).format('YYYY-MM-DD') : 'No date' %></span>
+          <% if (tagText) { %><span class="tag-chip">#<%= tagText %></span><% } %>
+        </div>
+
+        <!-- THE PILL ROW -->
+        <label class="task-pill">
+          <input type="checkbox" class="toggle" data-id="<%= task.id %>" <%= task.is_done?'checked':'' %> />
+          <span class="task-title"><%= task.title %></span>
+        </label>
+
+        <!-- Edit block -->
+        <details class="editwrap">
+          <summary>Edit</summary>
+          <form class="editForm" method="POST" action="/tasks/<%= task.id %>">
+            <input type="hidden" name="is_done" value="<%= task.is_done %>"/>
+            <label>Title</label>
+            <input name="title" value="<%= task.title %>" required />
+            <label>Description</label>
+            <textarea name="description" rows="2"><%= task.description || '' %></textarea>
+
+            <div class="grid3">
+              <div>
+                <label>Bucket</label>
+                <select name="bucket">
+                  <% buckets.forEach(b => { %>
+                    <option value="<%= b %>" <%= b===task.bucket ? 'selected' : '' %>><%= b %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <div>
+                <label>Date</label>
+                <input type="date" name="due_at" value="<%= task.due_at ? dayjs(task.due_at).format('YYYY-MM-DD') : '' %>"/>
+              </div>
+              <div>
+                <label>Priority</label>
+                <select name="priority">
+                  <option <%= task.priority==='High'?'selected':'' %>>High</option>
+                  <option <%= task.priority==='Mid'?'selected':'' %>>Mid</option>
+                  <option <%= task.priority==='Low'?'selected':'' %>>Low</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div>
+                <label>Tag</label>
+                <input name="tag" value="<%= tagText %>"/>
+              </div>
+              <div class="check">
+                <label><input type="checkbox" name="reminder_enabled" value="1" <%= task.reminder_enabled?'checked':'' %> > Reminder</label>
+              </div>
+            </div>
+            <div class="actions"><button type="submit">Update</button></div>
+          </form>
+        </details>
+
+        <form method="POST" action="/tasks/<%= task.id %>?_method=DELETE" onsubmit="return confirm('Delete this task?')">
+          <button class="danger" type="submit">Delete</button>
+        </form>
+      </li>
+      <% }) %>
+
+      <% if (tasks.length===0) { %>
+        <li class="empty card">No tasks in this list yet.</li>
+      <% } %>
+    </ul>
+  </main>
+
+  <!-- Right rail (calendar + sort) -->
+  <aside class="rail">
+    <% 
+      const now = dayjs();
+      const start = now.startOf('month');
+      const daysInMonth = now.daysInMonth();
+      const offset = start.day(); // 0=Sun
+      const cells = [];
+      for (let i = 0; i < offset; i++) cells.push('');
+      for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+      while (cells.length % 7 !== 0) cells.push('');
+      const isToday = (d) => d && now.date() === d;
+    %>
+
+    <div class="cal-head"><%= now.format('YYYY MMM') %></div>
+    <div class="calendar">
+      <div class="cal-row cal-headings">
+        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+      </div>
+      <div class="cal-grid">
+        <% cells.forEach(d => { %>
+          <span class="cal-cell <%= isToday(d)?'today':'' %>"><%= d || '' %></span>
+        <% }) %>
+      </div>
+    </div>
+
+    <a class="ghost full" href="/?bucket=All&sort=<%= encodeURIComponent(activeSort||'none') %>">Show All</a>
+
+    <div class="sort-box">
+      <div class="label">Sort Method</div>
+      <div class="sort-grid">
+        <a class="<%= (activeSort||'none')==='none'?'on':'' %>"
+           href="/?bucket=<%= encodeURIComponent(activeBucket) %>&sort=none">None</a>
+        <a class="<%= activeSort==='date'?'on':'' %>"
+           href="/?bucket=<%= encodeURIComponent(activeBucket) %>&sort=date">Date</a>
+        <a class="<%= activeSort==='name'?'on':'' %>"
+           href="/?bucket=<%= encodeURIComponent(activeBucket) %>&sort=name">Name</a>
+        <a class="<%= activeSort==='priority'?'on':'' %>"
+           href="/?bucket=<%= encodeURIComponent(activeBucket) %>&sort=priority">Priority</a>
+        <a class="<%= activeSort==='tag'?'on':'' %>"
+           href="/?bucket=<%= encodeURIComponent(activeBucket) %>&sort=tag">Tag</a>
+      </div>
+      
+    </div>
+  </aside>
+</div>
+
+<script>window.__BUCKETS__ = <%- JSON.stringify(buckets) %>;</script>
+<script src="/script.js"></script>
